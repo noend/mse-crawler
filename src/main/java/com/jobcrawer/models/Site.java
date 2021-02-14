@@ -29,40 +29,7 @@ public class Site {
 
     private int siteOffersLimit;
 
-
     private Date created;
-
-    public Site(
-            Long id,
-            String siteName,
-            String siteType,
-            String siteUrl,
-            String siteSelectorJobTitle,
-            String siteSelectorJobPosition,
-            String siteSelectorJobDescription,
-            String siteSelectorJobRefNumber,
-            String siteSelectorJobLocation,
-            String siteSelectorJobSalary,
-            String siteSelectorRow,
-            String siteSelectorPaginate,
-            int siteOffersLimit,
-            Date created
-    ) {
-        this.id = id;
-        this.siteName = siteName;
-        this.siteType = siteType;
-        this.siteUrl = siteUrl;
-        this.siteSelectorJobTitle = siteSelectorJobTitle;
-        this.siteSelectorJobPosition = siteSelectorJobPosition;
-        this.siteSelectorJobDescription = siteSelectorJobDescription;
-        this.siteSelectorJobRefNumber = siteSelectorJobRefNumber;
-        this.siteSelectorJobLocation = siteSelectorJobLocation;
-        this.siteSelectorJobSalary = siteSelectorJobSalary;
-        this.siteSelectorRow = siteSelectorRow;
-        this.siteSelectorPaginate = siteSelectorPaginate;
-        this.siteOffersLimit = siteOffersLimit;
-        this.created = created;
-    }
 
     public Long getId() {
         return id;

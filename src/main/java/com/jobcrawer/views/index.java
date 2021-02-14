@@ -2,6 +2,12 @@ package com.jobcrawer.views;
 
 import javax.swing.*;
 
+import com.jobcrawer.controllers.BaseController;
+import com.jobcrawer.models.Site;
+import com.jobcrawer.service.SiteService;
+
+import java.util.List;
+
 public class index extends JFrame{
     private JPanel mainPanel;
     private JLabel headerLabel;
@@ -15,6 +21,8 @@ public class index extends JFrame{
     private JButton addSiteButton;
     private JLabel siteListLabel;
 
+    private BaseController controller = new BaseController();
+
     private JFrame frame;
 
     public index(String title) {
@@ -24,6 +32,15 @@ public class index extends JFrame{
         this.setSize(860, 860);
         this.setContentPane(mainPanel);
 
+        controller.readFromFile();
+
+        for ( Site site : controller.getAllSites()) {
+            siteList.addItem(site.getSiteName());
+        }
+
+
+
         this.pack();
     }
+
 }

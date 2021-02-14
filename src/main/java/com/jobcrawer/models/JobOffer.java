@@ -24,49 +24,6 @@ public class JobOffer {
     private String jobLocation;
     private String jobSalary;
 
-
-    /**
-     * Constructor of the class
-     *
-     * @param id
-     * @param created
-     * @param siteName
-     * @param siteUrl
-     * @param jobTitle
-     * @param jobPosition
-     * @param jobDescription
-     * @param jobRefNumber
-     * @param jobLocation
-     * @param jobSalary
-     */
-    public JobOffer(
-            Long id,
-            Long siteId,
-            Date created,
-            String siteName,
-            String siteUrl,
-            String jobTitle,
-            String jobPosition,
-            String jobDescription,
-            String jobRefNumber,
-            String jobLocation,
-            String jobSalary
-    ) {
-        super();
-
-        this.id = id;
-        this.siteId = siteId;
-        this.created = created;
-        this.siteName = siteName;
-        this.siteUrl = siteUrl;
-        this.jobTitle = jobTitle;
-        this.jobPosition = jobPosition;
-        this.jobDescription = jobDescription;
-        this.jobRefNumber = jobRefNumber;
-        this.jobLocation = jobLocation;
-        this.jobSalary = jobSalary;
-    }
-
     public Long getId() {
         return id;
     }
