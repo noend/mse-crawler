@@ -1,17 +1,15 @@
 package com.jobcrawer.controllers;
 
 import com.jobcrawer.models.Site;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.jobcrawer.service.SiteService;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 
 public class BaseController {
 
@@ -55,7 +53,7 @@ public class BaseController {
         try (FileReader fr = new FileReader(filePath + "/src/main/java/com/jobcrawer/setings/sites.txt"); BufferedReader br = new BufferedReader(fr);) {
             String line;
             while ((line = br.readLine()) != null) {
-                Site site = this.convertStringToStudent(line);
+                Site site = this.convertStringToSite(line);
 //                System.out.printf("Read line - " + site);
                 this.addSite(site);
             }
@@ -64,7 +62,7 @@ public class BaseController {
         }
     }
 
-    private Site convertStringToStudent(String data) {
+    private Site convertStringToSite(String data) {
 
         Site site = new Site();
 
@@ -81,7 +79,7 @@ public class BaseController {
         site.setSiteSelectorJobLocation(arr[8]);
         site.setSiteSelectorJobSalary(arr[9]);
         site.setSiteSelectorRow(arr[10]);
-        site.setSiteSelectorPaginate(arr[11]);
+        site.setSiteSelectorNextPage(arr[11]);
         site.setSiteOffersLimit(Integer.parseInt(arr[12]));
 
         return site;

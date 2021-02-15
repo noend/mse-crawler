@@ -1,21 +1,23 @@
 package com.jobcrawer.factory;
 
-import com.jobcrawer.controllers.BaseController;
 import com.jobcrawer.models.Site;
+import com.jobcrawer.workers.NormalPageWorker;
+import com.jobcrawer.workers.SinglePageWorker;
 import org.openqa.selenium.WebDriver;
 
 public class pageFactory {
 
-    public static Page page(BaseController parent, Site site, WebDriver driver) {
-
-        if (site.getSiteType().contains("single")) {
-            return;
-        }
+    public static Page getPage(Site site, WebDriver driver) {
 
         if (site.getSiteType().contains("normal")) {
-            return;
+            return new NormalPageWorker();
         }
 
-        return;
+        if (site.getSiteType().contains("single")) {
+            return new SinglePageWorker();
+        }
+
+
+        return null;
     }
 }
