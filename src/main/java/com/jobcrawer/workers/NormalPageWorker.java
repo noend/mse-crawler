@@ -43,7 +43,8 @@ public class NormalPageWorker  extends Thread implements Page {
 
                 Elements jobOfferLink = document.select(site.getSiteSelectorRow());
 
-
+                System.out.printf("Row selected - " + jobOfferLink);
+                break;
 
             } while (!Objects.equals(getNextPage(currentPage), ""));
         }

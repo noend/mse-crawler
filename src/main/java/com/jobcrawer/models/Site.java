@@ -27,6 +27,7 @@ public class Site {
     private String siteSelectorRow;
     private String siteSelectorNextPage;
 
+    private int siteOffersPerPage;
     private int siteOffersLimit;
 
     private Date created;
@@ -125,6 +126,14 @@ public class Site {
 
     public void setSiteSelectorNextPage(String siteSelectorNextPage) {
         this.siteSelectorNextPage = siteSelectorNextPage;
+    }
+
+    public int getSiteOffersPerPage() {
+        return siteOffersPerPage;
+    }
+
+    public void setSiteOffersPerPage(int siteOffersPerPage) {
+        this.siteOffersPerPage = siteOffersPerPage;
     }
 
     public int getSiteOffersLimit() {

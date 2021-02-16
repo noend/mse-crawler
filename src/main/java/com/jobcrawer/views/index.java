@@ -1,12 +1,13 @@
 package com.jobcrawer.views;
 
-import javax.swing.*;
-
 import com.jobcrawer.controllers.BaseController;
 import com.jobcrawer.models.Site;
-import com.jobcrawer.service.SiteService;
+import com.jobcrawer.workers.Worker;
 
-import java.util.List;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class index extends JFrame{
     private JPanel mainPanel;
@@ -17,13 +18,17 @@ public class index extends JFrame{
     private JLabel jobOffersLimitLabel;
     private JTextField siteTimeoutField;
     private JLabel siteTimeoutLabel;
-    private JButton startProccesButton;
+    private JButton startProcessButton;
     private JButton addSiteButton;
     private JLabel siteListLabel;
+    private JTable offerListTable;
+    private JLabel offersListLabel;
+    private JScrollPane offerListPanel;
 
     private BaseController controller = new BaseController();
 
     private JFrame frame;
+    private Worker worker;
 
     public index(String title) {
         super(title);
@@ -41,6 +46,32 @@ public class index extends JFrame{
 
 
         this.pack();
+        startProcessButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int offersLimit = Integer.parseInt(jobOffersLimitField.getText());
+                Long timeout = Long.parseLong(siteTimeoutField.getText());
+
+
+
+            }
+        });
     }
 
+    public static JTable buildTableAndModel() {
+        String[] columnNames = { "Сайт", "URL", "Име на обява", "Позиция", "Описание на обява", "Референтен номер", "Локация", "Заплата"};
+
+        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+        JTable offersTable = new JTable(tableModel);
+        offersTable.setBounds(80, 80, 860, 560);
+        offersTable.setFillsViewportHeight(true);
+
+        return offersTable;
+    }
+
+    private void createUIComponents() {
+        offerListTable = buildTableAndModel();
+        offerListPanel =new JScrollPane(offerListTable);
+        this.getContentPane().add(offerListPanel);
+    }
 }

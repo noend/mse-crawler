@@ -178,15 +178,15 @@
         </constraints>
         <properties/>
       </component>
-      <component id="46976" class="javax.swing.JLabel" binding="siteSelectorPaginateLabel">
+      <component id="46976" class="javax.swing.JLabel" binding="siteSelectorNextPageLabel">
         <constraints>
           <grid row="7" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Селектор за странициране в листинга с обяви"/>
+          <text value="Селектор за следваща страница в списъка"/>
         </properties>
       </component>
-      <component id="16eee" class="javax.swing.JTextField" binding="siteSelectorPaginateField">
+      <component id="16eee" class="javax.swing.JTextField" binding="siteSelectorNextPageField">
         <constraints>
           <grid row="8" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>

@@ -1,6 +1,8 @@
 package com.jobcrawer.controllers;
 
+import com.jobcrawer.models.JobOffer;
 import com.jobcrawer.models.Site;
+import com.jobcrawer.workers.Worker;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -14,10 +16,13 @@ import java.util.List;
 public class BaseController {
 
     static List<Site> siteList;
+    static List<JobOffer> jobOffers;
     private WebDriver webDriver;
+    private Worker workers;
 
     public BaseController() {
         siteList = new ArrayList<>();
+        workers = new Worker();
     }
 
     /**
@@ -92,6 +97,32 @@ public class BaseController {
 
     public List<Site> getAllSites() {
         return siteList;
+    }
+
+    public boolean addOffer(JobOffer newJobOffer) {
+        return this.jobOffers.add(newJobOffer);
+    }
+
+    public List<JobOffer> getOfferList() {
+        return this.jobOffers;
+    }
+
+    public void startNewWorker() {
+//        this.workers.addWorker(PageFactory.getPage(this));
+    }
+
+    public Object[] buildTableObjectForOffer(JobOffer jobOffer) {
+        Object[] row = {
+                jobOffer.getSiteName(),
+                jobOffer.getSiteUrl(),
+                jobOffer.getJobTitle(),
+                jobOffer.getJobDescription(),
+                jobOffer.getJobRefNumber(),
+                jobOffer.getJobLocation(),
+                jobOffer.getJobSalary()
+        };
+
+        return row;
     }
 
 }
