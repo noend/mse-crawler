@@ -24,8 +24,8 @@ public class manageSite {
     private JLabel siteSelectorJobSalaryLabel;
     private JTextField siteSelectorRowField;
     private JLabel siteSelectorRowLabel;
-    private JTextField siteSelectorPaginateField;
-    private JLabel siteSelectorPaginateLabel;
+    private JTextField siteSelectorNextPageField;
+    private JLabel siteSelectorNextPageLabel;
     private JTextField siteOffersLimitField;
     private JLabel siteOffersLimitLabel;
     private JButton saveButton;

@@ -25,8 +25,9 @@ public class Site {
     private String siteSelectorJobSalary;
 
     private String siteSelectorRow;
-    private String siteSelectorPaginate;
+    private String siteSelectorNextPage;
 
+    private int siteOffersPerPage;
     private int siteOffersLimit;
 
     private Date created;
@@ -119,12 +120,20 @@ public class Site {
         this.siteSelectorRow = siteSelectorRow;
     }
 
-    public String getSiteSelectorPaginate() {
-        return siteSelectorPaginate;
+    public String getSiteSelectorNextPage() {
+        return siteSelectorNextPage;
     }
 
-    public void setSiteSelectorPaginate(String siteSelectorPaginate) {
-        this.siteSelectorPaginate = siteSelectorPaginate;
+    public void setSiteSelectorNextPage(String siteSelectorNextPage) {
+        this.siteSelectorNextPage = siteSelectorNextPage;
+    }
+
+    public int getSiteOffersPerPage() {
+        return siteOffersPerPage;
+    }
+
+    public void setSiteOffersPerPage(int siteOffersPerPage) {
+        this.siteOffersPerPage = siteOffersPerPage;
     }
 
     public int getSiteOffersLimit() {
