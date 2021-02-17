@@ -1,5 +1,6 @@
 package com.jobcrawer.controllers;
 
+import com.jobcrawer.factory.PageFactory;
 import com.jobcrawer.models.JobOffer;
 import com.jobcrawer.models.Site;
 import com.jobcrawer.workers.Worker;
@@ -7,21 +8,29 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+import org.jsoup.nodes.Document;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class BaseController {
 
     static List<Site> siteList;
-    static List<JobOffer> jobOffers;
+    static ArrayList<JobOffer> jobOffers;
     private WebDriver webDriver;
     private Worker workers;
 
     public BaseController() {
+
+        //Initialize site list
         siteList = new ArrayList<>();
+
+        //Initialize Worker list
         workers = new Worker();
     }
 
@@ -85,7 +94,8 @@ public class BaseController {
         site.setSiteSelectorJobSalary(arr[9]);
         site.setSiteSelectorRow(arr[10]);
         site.setSiteSelectorNextPage(arr[11]);
-        site.setSiteOffersLimit(Integer.parseInt(arr[12]));
+        site.setSiteOffersPerPage(Integer.parseInt(arr[12]));
+        site.setSiteOffersLimit(Integer.parseInt(arr[13]));
 
         return site;
     }
@@ -107,12 +117,30 @@ public class BaseController {
         return this.jobOffers;
     }
 
-    public void startNewWorker() {
-//        this.workers.addWorker(PageFactory.getPage(this));
+    public void startNewWorker(String selectedSite, int offersLimit, Long timeout) {
+        Site site = siteList.stream()
+                .filter(page -> selectedSite.equals(page.getSiteName()))
+                .findAny()
+                .orElse(null);
+        assert site != null;
+
+        this.workers.addWorker(PageFactory.getPage(this, site, webDriver, offersLimit, timeout));
+
+    }
+
+    public void runWorkers() {
+        this.workers.runAllWorkers();
+    }
+
+    public Long getlastJobOfferId() {
+        Comparator<JobOffer> jobOfferComparatorBYId = (p1, p2) -> (int) (p1.getId() - p2.getId());
+        Collections.sort(jobOffers, jobOfferComparatorBYId);
+        return jobOffers.get(jobOffers.size() - 1).getId();
     }
 
     public Object[] buildTableObjectForOffer(JobOffer jobOffer) {
         Object[] row = {
+                jobOffer.getId(),
                 jobOffer.getSiteName(),
                 jobOffer.getSiteUrl(),
                 jobOffer.getJobTitle(),

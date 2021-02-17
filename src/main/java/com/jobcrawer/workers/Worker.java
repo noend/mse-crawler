@@ -29,7 +29,7 @@ public class Worker {
             if(!workers.contains(page)) workers.add(page);
         }
 
-        return this.workers.add(page); }
+        return true; }
 
     public void removeWorker(Page page) {
         synchronized (MUTEX) {

@@ -8,10 +8,10 @@ import org.openqa.selenium.WebDriver;
 
 public class PageFactory {
 
-    public static Page getPage(BaseController parent, Site site, WebDriver driver) {
+    public static Page getPage(BaseController controller, Site site, WebDriver driver, int offersLimit, Long timeout) {
 
         if (site.getSiteType().contains("normal")) {
-            return new NormalPageWorker();
+            return new NormalPageWorker(controller, site, offersLimit, timeout);
         }
 
         if (site.getSiteType().contains("single")) {
