@@ -10,6 +10,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 import org.jsoup.nodes.Document;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -29,6 +30,7 @@ public class BaseController {
 
         //Initialize site list
         siteList = new ArrayList<>();
+        jobOffers = new ArrayList<>();
 
         //Initialize Worker list
         workers = new Worker();
@@ -110,21 +112,21 @@ public class BaseController {
     }
 
     public boolean addOffer(JobOffer newJobOffer) {
-        return this.jobOffers.add(newJobOffer);
+        return jobOffers.add(newJobOffer);
     }
 
     public List<JobOffer> getOfferList() {
         return this.jobOffers;
     }
 
-    public void startNewWorker(String selectedSite, int offersLimit, Long timeout) {
+    public void startNewWorker(String selectedSite, int offersLimit, Integer timeout, JTable offersListTable) {
         Site site = siteList.stream()
                 .filter(page -> selectedSite.equals(page.getSiteName()))
                 .findAny()
                 .orElse(null);
         assert site != null;
 
-        this.workers.addWorker(PageFactory.getPage(this, site, webDriver, offersLimit, timeout));
+        this.workers.addWorker(PageFactory.getPage(this, site, webDriver, offersLimit, timeout, offersListTable));
 
     }
 
@@ -134,8 +136,18 @@ public class BaseController {
 
     public Long getlastJobOfferId() {
         Comparator<JobOffer> jobOfferComparatorBYId = (p1, p2) -> (int) (p1.getId() - p2.getId());
-        Collections.sort(jobOffers, jobOfferComparatorBYId);
-        return jobOffers.get(jobOffers.size() - 1).getId();
+
+
+        if(jobOffers != null && jobOffers.size() > 0) {
+            jobOffers.sort(jobOfferComparatorBYId);
+
+            System.out.printf("Offers - " + jobOffers.size());
+            System.out.println();
+
+            return jobOffers.get(jobOffers.size() - 1).getId();
+        } else {
+            return 0L;
+        }
     }
 
     public Object[] buildTableObjectForOffer(JobOffer jobOffer) {

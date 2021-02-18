@@ -53,9 +53,9 @@ public class index extends JFrame{
 
                 String selectedSite = (String) siteList.getSelectedItem();
                 int offersLimit = Integer.parseInt(jobOffersLimitField.getText());
-                Long timeout = Long.parseLong(siteTimeoutField.getText());
+                Integer timeout = Integer.parseInt(siteTimeoutField.getText());
 
-                controller.startNewWorker(selectedSite, offersLimit, timeout);
+                controller.startNewWorker(selectedSite, offersLimit, timeout, offerListTable);
 
                 try {
                     controller.runWorkers();

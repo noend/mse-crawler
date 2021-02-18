@@ -9,20 +9,26 @@ import org.jsoup.select.Elements;
 import com.jobcrawer.factory.Page;
 import com.jobcrawer.models.Site;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Random;
 
 public class NormalPageWorker extends Thread implements Page {
 
     private BaseController controller;
     private Site site;
+    private JTable offersListTable;
 
     private int offersPerPage;
     private int offersLimit;
 
-    private Long timeout;
+    private Integer timeout;
 
     private String siteUrl;
     private String baseSiteUrl;
@@ -30,12 +36,13 @@ public class NormalPageWorker extends Thread implements Page {
     private String currentPage;
     private int crawledPages;
 
-    public NormalPageWorker(BaseController controller, Site site, int offersLimit, Long timeout) {
+    public NormalPageWorker(BaseController controller, Site site, int offersLimit, Integer timeout, JTable offersListTable) {
 
         super();
 
         this.controller = controller;
         this.site = site;
+        this.offersListTable = offersListTable;
         this.offersPerPage = site.getSiteOffersPerPage();
         this.offersLimit = offersLimit;
         this.crawledPages = 0;
@@ -52,6 +59,10 @@ public class NormalPageWorker extends Thread implements Page {
 
     }
 
+    /**
+     * Crawl site data according {@link Site} state and his selectors.
+     * Builds {@link com.jobcrawer.models.JobOffer} objects and put them in list.
+     */
     private void crawlSite() {
 
 
@@ -68,33 +79,38 @@ public class NormalPageWorker extends Thread implements Page {
 
         this.currentPage = siteUrl;
 
-        // Get job offers from the first page
-        getJobOffersFromList(currentPage);
+        if (crawledPages < site.getSiteOffersLimit()) {
 
-        // If there is next page - go to it and crawl offers
-        if (!getNextPage(currentPage).equals("")) {
-            do {
+            // Get job offers from the first page
+            getJobOffersFromList(currentPage);
 
-                this.currentPage = baseSiteUrl + getNextPage(currentPage);
+            // If there is next page - go to it and crawl offers
+            if (!getNextPage(currentPage).equals("")) {
+                do {
 
-                getJobOffersFromList(currentPage);
+                    this.currentPage = baseSiteUrl + getNextPage(currentPage);
 
-            } while (!Objects.equals(getNextPage(currentPage), ""));
+                    getJobOffersFromList(currentPage);
+
+                } while (!Objects.equals(getNextPage(currentPage), ""));
+            }
         }
+
     }
+
 
     private void getJobOffersFromList(String pageURL) {
         Document document = null;
 
         try {
-            document = Jsoup.connect(siteUrl).get();
+            document = Jsoup.connect(pageURL).get();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         Elements jobOfferRowSelector = document.select(this.site.getSiteSelectorRow());
 
-        for (int rowNum = 0; rowNum < offersPerPage; rowNum++) {
+        for (int rowNum = 0; ((rowNum < offersPerPage) && (crawledPages < site.getSiteOffersLimit())); rowNum++) {
 
             String hrefSelector = jobOfferRowSelector.get(rowNum).attr("href");
 
@@ -109,25 +125,75 @@ public class NormalPageWorker extends Thread implements Page {
                 }
             }
 
+            this.crawledPages++;
 
             try {
 
-                Document jobOfferDocument = Jsoup.connect(link).get();
+                JobOffer newJobOffer = this.createJobOfferFromDocument(link);
 
-                this.createJobOfferFromDocument(jobOfferDocument);
+//            System.out.printf("New job - " + newJobOffer);
+//            System.out.println();
+//            System.exit(0);
 
-            } catch (IOException de) {
-                de.printStackTrace();
+                controller.addOffer(newJobOffer);
+                Object[] row = controller.buildTableObjectForOffer(newJobOffer);
+
+                DefaultTableModel model = (DefaultTableModel) offersListTable.getModel();
+
+                model.addRow(row);
+
+                Thread.sleep(getRandom(timeout));
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
 
         }
 
     }
 
-    private void createJobOfferFromDocument(Document document) {
-          JobOffer  newJobOffer = new JobOffer();
 
-//          controller.buildTableObjectForOffer(newJobOffer, document);
+    public static String getElementFromDocument(Document jobDoc, String selector) {
+        String result = "";
+        try {
+            Elements select = jobDoc.select(selector);
+            result = select.text();
+        } catch (Exception e) {
+            // ignored
+        }
+        return result;
+    }
+
+
+    private JobOffer createJobOfferFromDocument(String link) {
+
+        Document jobOfferDocument = null;
+
+        try {
+
+            jobOfferDocument = Jsoup.connect(link).get();
+
+        } catch (IOException de) {
+            de.printStackTrace();
+        }
+
+
+
+        JobOffer  newJobOffer = new JobOffer();
+
+        newJobOffer.setId(controller.getlastJobOfferId() + 1);
+        newJobOffer.setSiteId(site.getId());
+        newJobOffer.setCreated(Timestamp.valueOf(LocalDateTime.now()));
+        newJobOffer.setSiteName(site.getSiteName());
+        newJobOffer.setSiteUrl(link);
+        newJobOffer.setJobTitle(getElementFromDocument(jobOfferDocument, site.getSiteSelectorJobTitle()));
+        newJobOffer.setJobPosition(getElementFromDocument(jobOfferDocument, site.getSiteSelectorJobPosition()));
+        newJobOffer.setJobDescription(getElementFromDocument(jobOfferDocument, site.getSiteSelectorJobDescription()));
+        newJobOffer.setJobRefNumber(getElementFromDocument(jobOfferDocument, site.getSiteSelectorJobRefNumber()));
+        newJobOffer.setJobLocation(getElementFromDocument(jobOfferDocument, site.getSiteSelectorJobLocation()));
+        newJobOffer.setJobSalary(getElementFromDocument(jobOfferDocument, site.getSiteSelectorJobSalary()));
+
+        return newJobOffer;
 
     }
 
@@ -153,6 +219,11 @@ public class NormalPageWorker extends Thread implements Page {
 
     public Site getSite() {
         return site;
+    }
+
+    private int getRandom(int max) {
+        Random random = new Random();
+        return random.nextInt(max - 0) + 0;
     }
 
     @Override

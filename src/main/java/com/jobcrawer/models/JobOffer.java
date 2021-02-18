@@ -111,4 +111,8 @@ public class JobOffer {
     public void setJobSalary(String jobSalary) {
         this.jobSalary = jobSalary;
     }
+
+    public String toString() {
+    return String.valueOf(this.getId());
+    }
 }
