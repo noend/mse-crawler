@@ -107,6 +107,18 @@ public class BaseController {
         return siteList.add(site);
     }
 
+    public Site getSite(String selectedSite) {
+
+        Site site = siteList.stream()
+                .filter(page -> selectedSite.equals(page.getSiteName()))
+                .findAny()
+                .orElse(null);
+        assert site != null;
+
+
+        return site;
+    }
+
     public List<Site> getAllSites() {
         return siteList;
     }

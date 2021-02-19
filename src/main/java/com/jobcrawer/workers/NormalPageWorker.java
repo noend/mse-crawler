@@ -138,9 +138,11 @@ public class NormalPageWorker extends Thread implements Page {
                 controller.addOffer(newJobOffer);
                 Object[] row = controller.buildTableObjectForOffer(newJobOffer);
 
-                DefaultTableModel model = (DefaultTableModel) offersListTable.getModel();
+                if (offersListTable != null) {
+                    DefaultTableModel model = (DefaultTableModel) offersListTable.getModel();
 
-                model.addRow(row);
+                    model.addRow(row);
+                }
 
                 Thread.sleep(getRandom(timeout));
 

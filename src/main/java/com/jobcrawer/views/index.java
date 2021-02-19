@@ -31,6 +31,9 @@ public class index extends JFrame{
     private JFrame frame;
     private Worker workers;
 
+    String selectedSite;
+
+
     public index(String title) {
         super(title);
 
@@ -40,6 +43,7 @@ public class index extends JFrame{
 
         controller.readFromFile();
 
+        siteList.addItem("Изберете сайт от списъка");
         for ( Site site : controller.getAllSites()) {
             siteList.addItem(site.getSiteName());
         }
@@ -55,14 +59,44 @@ public class index extends JFrame{
                 int offersLimit = Integer.parseInt(jobOffersLimitField.getText());
                 Integer timeout = Integer.parseInt(siteTimeoutField.getText());
 
-                controller.startNewWorker(selectedSite, offersLimit, timeout, offerListTable);
-
-                try {
-                    controller.runWorkers();
-                } catch (Exception ex) {
-                    System.out.println("Failed to start Workers");
-                    ex.printStackTrace();
+                if (siteList.getSelectedIndex() != 0 ) {
+                    controller.startNewWorker(selectedSite, offersLimit, timeout, offerListTable);
+                    try {
+                        controller.runWorkers();
+                    } catch (Exception ex) {
+                        System.out.println("Failed to start Workers");
+                        ex.printStackTrace();
+                    }
                 }
+
+            }
+        });
+        siteList.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                selectedSite = (String) siteList.getSelectedItem();
+
+                Site site = controller.getSite(selectedSite);
+
+            if (site != null){
+                jobOffersLimitField.setText(String.valueOf(site.getSiteOffersLimit()));
+            }
+
+            }
+        });
+        addSiteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame = new manageSite("Управлени на сайт", controller, selectedSite, "new");
+                frame.setVisible(true);
+            }
+        });
+        editSiteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame = new manageSite("Управлени на сайт", controller, selectedSite, "edit");
+                frame.setVisible(true);
             }
         });
     }
